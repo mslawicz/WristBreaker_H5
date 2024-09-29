@@ -22,7 +22,7 @@
 #include "app_azure_rtos.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "logger.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,13 +129,14 @@ VOID tx_application_define(VOID *first_unused_memory)
     if (status != UX_SUCCESS)
     {
       /* USER CODE BEGIN  MX_USBX_Device_Init_Error */
+      LOG_ERROR("MX_USBX_Device_Init status %u", status);
       while(1)
       {
       }
       /* USER CODE END  MX_USBX_Device_Init_Error */
     }
     /* USER CODE BEGIN  MX_USBX_Device_Init_Success */
-
+    LOG_INFO("MX_USBX_Device_Init success");
     /* USER CODE END  MX_USBX_Device_Init_Success */
   }
 #else

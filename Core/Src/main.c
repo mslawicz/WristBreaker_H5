@@ -98,7 +98,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   pLoggerUART = &huart3;
 
-  LOG_INFO("WristBreaker H5 ver 1.0");
+  LOG_INFO("WristBreaker H5 ver 0.1");
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
