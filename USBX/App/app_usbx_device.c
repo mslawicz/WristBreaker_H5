@@ -23,6 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "main.h"
 #include "logger.h"
 #include "game_controller.h"
 /* USER CODE END Includes */
@@ -49,7 +50,7 @@ static UX_SLAVE_CLASS_HID_PARAMETER custom_hid_parameter;
 static TX_THREAD ux_device_app_thread;
 
 /* USER CODE BEGIN PV */
-
+extern PCD_HandleTypeDef hpcd_USB_DRD_FS;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -208,6 +209,12 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   /* USER CODE BEGIN app_ux_device_thread_entry */
   TX_PARAMETER_NOT_USED(thread_input);
   LOG_INFO("app_ux_device_thread_entry");
+
+  /* USB Initialization Function */
+  MX_USB_PCD_Init();
+
+  /* Start USB device */
+  HAL_PCD_Start(&hpcd_USB_DRD_FS);
 
   gameController();
   /* program never returns from gameController function*/

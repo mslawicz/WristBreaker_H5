@@ -78,7 +78,7 @@ static TX_BYTE_POOL ux_device_app_byte_pool;
 VOID tx_application_define(VOID *first_unused_memory)
 {
   /* USER CODE BEGIN  tx_application_define_1*/
-
+  TX_PARAMETER_NOT_USED(first_unused_memory);
   /* USER CODE END  tx_application_define_1 */
 #if (USE_STATIC_ALLOCATION == 1)
   UINT status = TX_SUCCESS;
@@ -115,7 +115,7 @@ VOID tx_application_define(VOID *first_unused_memory)
   if (tx_byte_pool_create(&ux_device_app_byte_pool, "Ux App memory pool", ux_device_byte_pool_buffer, UX_DEVICE_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
     /* USER CODE BEGIN UX_Device_Byte_Pool_Error */
-
+    LOG_ERROR("Ux App memory pool");
     /* USER CODE END UX_Device_Byte_Pool_Error */
   }
   else
