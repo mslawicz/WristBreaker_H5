@@ -210,8 +210,18 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   TX_PARAMETER_NOT_USED(thread_input);
   LOG_INFO("app_ux_device_thread_entry");
 
+  HAL_PWREx_EnableVddUSB();
+
   /* USB Initialization Function */
   MX_USB_PCD_Init();
+  
+  /* USB packet memory area configuration */
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x18);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x58);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, USBD_HID_CUSTOM_EPIN_ADDR, PCD_SNG_BUF, 0x98);
+
+  /* initialize the device controller driver */
+  ux_dcd_stm32_initialize((ULONG)USB_DRD_FS, (ULONG)&hpcd_USB_DRD_FS);
 
   /* Start USB device */
   HAL_PCD_Start(&hpcd_USB_DRD_FS);
