@@ -293,7 +293,6 @@ void MX_USB_PCD_Init(void)
   hpcd_USB_DRD_FS.Init.iso_singlebuffer_enable = DISABLE;
   if (HAL_PCD_Init(&hpcd_USB_DRD_FS) != HAL_OK)
   {
-    LOG_ERROR("MX_USB_PCD_Init");
     Error_Handler();
   }
   /* USER CODE BEGIN USB_Init 2 */

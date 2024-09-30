@@ -247,7 +247,7 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 /* USER CODE END Private_defines */
 
 #define USBD_VID                                      1155
-#define USBD_PID                                      22288
+#define USBD_PID                                      22368
 #define USBD_LANGID_STRING                            1033
 #define USBD_MANUFACTURER_STRING                      "MS Controllers"
 #define USBD_PRODUCT_STRING                           "WristBreaker"
