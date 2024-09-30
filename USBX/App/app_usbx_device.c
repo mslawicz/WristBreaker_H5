@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "logger.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,6 +85,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                        USBX_DEVICE_MEMORY_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_ALLOCATE_STACK_ERROR */
+    LOG_ERROR("Allocate the stack for USBX Memory");
     return TX_POOL_ERROR;
     /* USER CODE END USBX_ALLOCATE_STACK_ERROR */
   }
@@ -93,6 +94,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
+    LOG_ERROR("Initialize USBX Memory");
     return UX_ERROR;
     /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
@@ -123,6 +125,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                                  USBD_ChangeFunction) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERROR */
+    LOG_ERROR("Install the device portion of USBX");
     return UX_ERROR;
     /* USER CODE END USBX_DEVICE_INITIALIZE_ERROR */
   }
@@ -160,6 +163,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                                      &custom_hid_parameter) != UX_SUCCESS)
   {
   /* USER CODE BEGIN USBX_DEVICE_HID_CUSTOM_REGISTER_ERROR */
+  LOG_ERROR("Initialize the device hid custom class");
   return UX_ERROR;
   /* USER CODE END USBX_DEVICE_HID_CUSTOM_REGISTER_ERROR */
   }
@@ -169,6 +173,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                        TX_NO_WAIT) != TX_SUCCESS)
   {
     /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
+    LOG_ERROR("Allocate the stack for device application main thread");
     return TX_POOL_ERROR;
     /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
   }
@@ -180,12 +185,13 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                        UX_DEVICE_APP_THREAD_START_OPTION) != TX_SUCCESS)
   {
     /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
+    LOG_ERROR("Create the device application main thread");
     return TX_THREAD_ERROR;
     /* USER CODE END MAIN_THREAD_CREATE_ERROR */
   }
 
   /* USER CODE BEGIN MX_USBX_Device_Init1 */
-
+  LOG_INFO("Create the device application main thread success");
   /* USER CODE END MX_USBX_Device_Init1 */
 
   return ret;
@@ -200,6 +206,12 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 {
   /* USER CODE BEGIN app_ux_device_thread_entry */
   TX_PARAMETER_NOT_USED(thread_input);
+  LOG_INFO("app_ux_device_thread_entry");
+
+  while(1)
+  {
+    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(1000));
+  }
   /* USER CODE END app_ux_device_thread_entry */
 }
 

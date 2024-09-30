@@ -115,7 +115,8 @@ void MX_ThreadX_Init(void)
   */
 void gameControllerEntry(ULONG thread_input)
 {
-  (void) thread_input;
+  TX_PARAMETER_NOT_USED(thread_input);
+  LOG_INFO("gameControllerEntry");
 
   /* Infinite loop */
   while (1)
