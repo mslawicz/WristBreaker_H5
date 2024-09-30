@@ -2,7 +2,6 @@
 #define __GAME_CONTROLLER_H
 
 #include "main.h"
-#include "ux_api.h"
 
 #ifdef __cplusplus
  extern "C" {
