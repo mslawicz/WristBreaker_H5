@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "logger.h"
+#include "game_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -208,10 +209,8 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   TX_PARAMETER_NOT_USED(thread_input);
   LOG_INFO("app_ux_device_thread_entry");
 
-  while(1)
-  {
-    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(1000));
-  }
+  gameController();
+  /* program never returns from gameController function*/
   /* USER CODE END app_ux_device_thread_entry */
 }
 
