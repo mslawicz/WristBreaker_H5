@@ -98,7 +98,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   pLoggerUART = &huart3;
 
-  LOG_INFO("WristBreaker H5 ver 0.1");
+  LOG_INFO("WristBreaker H5 ver 2.0.1");
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
@@ -329,7 +329,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOG, LED_R_Pin|TEST_1_Pin|TEST_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PB_NUCLEO_Pin */
   GPIO_InitStruct.Pin = PB_NUCLEO_Pin;
@@ -393,6 +393,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_R_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : TEST_1_Pin TEST_2_Pin */
+  GPIO_InitStruct.Pin = TEST_1_Pin|TEST_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /*Configure GPIO pin : UCPD_FLT_Pin */
   GPIO_InitStruct.Pin = UCPD_FLT_Pin;
