@@ -63,6 +63,7 @@ void sendJoyReport(void)
   UX_SLAVE_DEVICE* pDevice;
   UX_SLAVE_INTERFACE* pInterface;
 
+  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_SET); //XXX test
   /* get USB device */
   pDevice = &_ux_system_slave->ux_system_slave_device;
   /* get the interface */
@@ -80,7 +81,6 @@ void sendJoyReport(void)
 
 
   // XXX test of joystick report
-  HAL_GPIO_TogglePin(TEST_2_GPIO_Port, TEST_2_Pin);
   static uint32_t cnt = 0;
   int16_t i16val = -32767 + (cnt % 10) * 6553;
   joyReport.X = i16val;
@@ -100,6 +100,7 @@ void sendJoyReport(void)
   hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_JOY;
   hidEvent.ux_device_class_hid_event_length = sizeof(JoyReport_t);
   ux_device_class_hid_event_set(pHid, &hidEvent);
+  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_RESET);
 }
 
 void gameControllerTrigger(ULONG arg) //XXX temp
