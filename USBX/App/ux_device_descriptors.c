@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define REPORT_ID_JOY   1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -108,6 +108,7 @@ __ALIGN_END =
   0x05, 0x01,                    /* USAGE_PAGE (Generic Desktop) */
   0x09, 0x04,                    /* USAGE (Joystick) */
   0xa1, 0x01,                    /* COLLECTION (Application) */
+  0x85, REPORT_ID_JOY,           /*   REPORT_ID (REPORT_ID_JOY) */
   0x05, 0x01,                    /*   USAGE_PAGE (Generic Desktop) */
   0x09, 0x01,                    /*   USAGE (Pointer) */
   0xa1, 0x00,                    /*   COLLECTION (Physical) */

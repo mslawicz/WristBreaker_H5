@@ -6,8 +6,10 @@
 #define JOY_REPORT_SIZE (8*2 + 1 + 4)
 
 uint8_t joyReport[JOY_REPORT_SIZE];
+UX_SLAVE_CLASS_HID_EVENT hidEvent;
+UX_SLAVE_CLASS_HID* pHid;
 
-void sendHidReport(void);
+void sendJoyReport(void);
 
 /**
   * @brief  Function implementing the Game Controller entry thread.
@@ -30,16 +32,14 @@ void gameController(void)
     HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
     tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(800));     
 
-    sendHidReport();       
+    //sendJoyReport();       
   }
 }
 
-void sendHidReport(void)
+void sendJoyReport(void)
 {
   UX_SLAVE_DEVICE* pDevice;
-  UX_SLAVE_CLASS_HID_EVENT hidEvent;
   UX_SLAVE_INTERFACE* pInterface;
-  UX_SLAVE_CLASS_HID* pHid;
 
   pDevice = &_ux_system_slave->ux_system_slave_device;
   ux_utility_memory_set(&hidEvent, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
