@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define REPORT_ID_JOY   1
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
