@@ -7,6 +7,8 @@
  extern "C" {
 #endif
 
+#define GAME_CTRL_EVENT_TIMER_TRIG  ((uint32_t)(1 << 0))
+
 void gameController(void);
 
 

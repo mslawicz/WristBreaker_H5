@@ -22,6 +22,7 @@ UX_SLAVE_CLASS_HID_EVENT hidEvent;
 UX_SLAVE_CLASS_HID* pHid;
 JoyReport_t joyReport;
 TX_TIMER gameControllerTimer; //XXX temporary triggering timer
+TX_EVENT_FLAGS_GROUP gameControllerEvents;
 
 void sendJoyReport(void);
 void gameControllerTrigger(ULONG arg);  //XXX temp
@@ -33,20 +34,25 @@ void gameControllerTrigger(ULONG arg);  //XXX temp
   */
 void gameController(void)
 {
+  ULONG actualFlags;
   LOG_INFO("gameController entry");
   tx_timer_create(&gameControllerTimer, "game controller timer", gameControllerTrigger, 0, 100, 1, TX_AUTO_ACTIVATE); //XXX temp
+  tx_event_flags_create(&gameControllerEvents, "game controller events");
 
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
-    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
-    HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
-    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(100));
-    HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
-    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
-    HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
-    tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(800));     
+    tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
+    HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_RESET); //XXX test
+
+    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
+    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
+    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
+    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(100));
+    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
+    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
+    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
+    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(800));
 
     sendJoyReport();       
   }
@@ -99,5 +105,6 @@ void sendJoyReport(void)
 void gameControllerTrigger(ULONG arg) //XXX temp
 {
   TX_PARAMETER_NOT_USED(arg);
-  HAL_GPIO_TogglePin(TEST_1_GPIO_Port, TEST_1_Pin);
+  HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_SET);
+  tx_event_flags_set(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR);
 }
