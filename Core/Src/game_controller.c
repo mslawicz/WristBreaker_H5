@@ -4,11 +4,23 @@
 #include "ux_device_class_hid.h"
 #include "ux_device_descriptors.h"
 
-#define JOY_REPORT_SIZE (8*2 + 1 + 4)
+typedef struct __attribute__((__packed__))
+{
+  int16_t X;
+  int16_t Y;
+  int16_t Z;
+  int16_t Rx;
+  int16_t Ry;
+  int16_t Rz;
+  int16_t slider;
+  int16_t dial;
+  uint8_t hat;
+  uint32_t buttons;
+} JoyReport_t;
 
-uint8_t joyReport[JOY_REPORT_SIZE];
 UX_SLAVE_CLASS_HID_EVENT hidEvent;
 UX_SLAVE_CLASS_HID* pHid;
+JoyReport_t joyReport;
 
 void sendJoyReport(void);
 
@@ -42,36 +54,40 @@ void sendJoyReport(void)
   UX_SLAVE_DEVICE* pDevice;
   UX_SLAVE_INTERFACE* pInterface;
 
+  /* get USB device */
   pDevice = &_ux_system_slave->ux_system_slave_device;
-  ux_utility_memory_set(&hidEvent, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
-
-  /* check if USB device has been configured */
-  if(pDevice->ux_slave_device_state != UX_DEVICE_CONFIGURED)
-  {
-    return;
-  }
-
   /* get the interface */
   pInterface = pDevice->ux_slave_device_first_interface;
   /* get the HID instance */
   pHid = pInterface->ux_slave_interface_class_instance;
+  ux_utility_memory_set(&hidEvent, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
+
+  /* check if USB device has been configured */
+  if((pDevice->ux_slave_device_state != UX_DEVICE_CONFIGURED) || (pHid == TX_NULL))
+  {
+    return;
+  }
 
 
+
+  // XXX test of joystick report
   static uint32_t cnt = 0;
-  int16_t i16val = -32767 + (cnt % 10) * 6553; 
-  hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_JOY;
-  hidEvent.ux_device_class_hid_event_length = JOY_REPORT_SIZE;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 0) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 2) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 4) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 6) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 8) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 10) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 12) = i16val;
-  *(int16_t*)(hidEvent.ux_device_class_hid_event_buffer + 14) = i16val;
-  hidEvent.ux_device_class_hid_event_buffer[16] = (cnt % 8) + 1;
-  *(uint32_t*)(hidEvent.ux_device_class_hid_event_buffer + 17) = 1 << (cnt % 32);
+  int16_t i16val = -32767 + (cnt % 10) * 6553;
+  joyReport.X = i16val;
+  joyReport.Y = i16val;
+  joyReport.Z = i16val;
+  joyReport.Rx = i16val;
+  joyReport.Ry = i16val;
+  joyReport.Rz = i16val;
+  joyReport.slider = i16val;
+  joyReport.dial = i16val;
+  joyReport.hat = (cnt % 8) + 1;
+  joyReport.buttons = 1 << (cnt % 32);
   cnt++;
+  // XXX end of test
 
+  memcpy(hidEvent.ux_device_class_hid_event_buffer, &joyReport, sizeof(joyReport));
+  hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_JOY;
+  hidEvent.ux_device_class_hid_event_length = sizeof(JoyReport_t);
   ux_device_class_hid_event_set(pHid, &hidEvent);
 }
