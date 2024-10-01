@@ -21,8 +21,10 @@ typedef struct __attribute__((__packed__))
 UX_SLAVE_CLASS_HID_EVENT hidEvent;
 UX_SLAVE_CLASS_HID* pHid;
 JoyReport_t joyReport;
+TX_TIMER gameControllerTimer; //XXX temporary triggering timer
 
 void sendJoyReport(void);
+void gameControllerTrigger(ULONG arg);  //XXX temp
 
 /**
   * @brief  Function implementing the Game Controller entry thread.
@@ -32,6 +34,7 @@ void sendJoyReport(void);
 void gameController(void)
 {
   LOG_INFO("gameController entry");
+  tx_timer_create(&gameControllerTimer, "game controller timer", gameControllerTrigger, 0, 100, 1, TX_AUTO_ACTIVATE); //XXX temp
 
   /* Infinite loop */
   while (1)
@@ -71,6 +74,7 @@ void sendJoyReport(void)
 
 
   // XXX test of joystick report
+  HAL_GPIO_TogglePin(TEST_2_GPIO_Port, TEST_2_Pin);
   static uint32_t cnt = 0;
   int16_t i16val = -32767 + (cnt % 10) * 6553;
   joyReport.X = i16val;
@@ -90,4 +94,10 @@ void sendJoyReport(void)
   hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_JOY;
   hidEvent.ux_device_class_hid_event_length = sizeof(JoyReport_t);
   ux_device_class_hid_event_set(pHid, &hidEvent);
+}
+
+void gameControllerTrigger(ULONG arg) //XXX temp
+{
+  TX_PARAMETER_NOT_USED(arg);
+  HAL_GPIO_TogglePin(TEST_1_GPIO_Port, TEST_1_Pin);
 }
