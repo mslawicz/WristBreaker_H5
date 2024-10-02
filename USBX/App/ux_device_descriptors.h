@@ -244,6 +244,7 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_defines */
 #define REPORT_ID_JOY   1
+#define REPORT_ID_BUF   2
 /* USER CODE END Private_defines */
 
 #define USBD_VID                                      1155
