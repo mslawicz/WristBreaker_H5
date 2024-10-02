@@ -34,6 +34,7 @@ void gameControllerTrigger(ULONG arg);  //XXX temp
   */
 void gameController(void)
 {
+  static uint32_t loopCounter = 0;
   ULONG actualFlags;
   LOG_INFO("gameController entry");
   tx_timer_create(&gameControllerTimer, "game controller timer", gameControllerTrigger, 0, 100, 1, TX_AUTO_ACTIVATE); //XXX temp
@@ -45,16 +46,12 @@ void gameController(void)
     tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
     HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_RESET); //XXX test
 
-    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
-    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
-    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
-    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(100));
-    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
-    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(50));
-    // HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
-    // tx_thread_sleep(UX_MS_TO_TICK_NON_ZERO(800));
+    sendJoyReport();
 
-    sendJoyReport();       
+    if((loopCounter++ % (TX_TIMER_TICKS_PER_SECOND >> 1)) == 0) //true every half a second
+    {
+      HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
+    }    
   }
 }
 
@@ -73,16 +70,17 @@ void sendJoyReport(void)
   ux_utility_memory_set(&hidEvent, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
 
   /* check if USB device has been configured */
-  if((pDevice->ux_slave_device_state != UX_DEVICE_CONFIGURED) || (pHid == TX_NULL))
+  if((pDevice == TX_NULL) ||
+    (pDevice->ux_slave_device_state != UX_DEVICE_CONFIGURED) ||
+    (pInterface == TX_NULL) ||
+    (pHid == TX_NULL))
   {
     return;
   }
 
-
-
   // XXX test of joystick report
   static uint32_t cnt = 0;
-  int16_t i16val = -32767 + (cnt % 10) * 6553;
+  int16_t i16val = -32767 + (cnt % 100) * 655;
   joyReport.X = i16val;
   joyReport.Y = i16val;
   joyReport.Z = i16val;
@@ -91,8 +89,8 @@ void sendJoyReport(void)
   joyReport.Rz = i16val;
   joyReport.slider = i16val;
   joyReport.dial = i16val;
-  joyReport.hat = (cnt % 8) + 1;
-  joyReport.buttons = 1 << (cnt % 32);
+  joyReport.hat = ((cnt >> 5) % 8) + 1;
+  joyReport.buttons = 1 << ((cnt >> 5) % 32);
   cnt++;
   // XXX end of test
 
