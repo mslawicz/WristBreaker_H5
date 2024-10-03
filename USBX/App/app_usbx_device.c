@@ -219,6 +219,7 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x18);
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x58);
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, USBD_HID_CUSTOM_EPIN_ADDR, PCD_SNG_BUF, 0x98);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, USBD_HID_CUSTOM_EPOUT_ADDR, PCD_SNG_BUF, 0xD8);
 
   /* initialize the device controller driver */
   ux_dcd_stm32_initialize((ULONG)USB_DRD_FS, (ULONG)&hpcd_USB_DRD_FS);

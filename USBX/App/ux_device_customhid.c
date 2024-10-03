@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "logger.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,7 +101,7 @@ UINT USBD_Custom_HID_SetFeature(UX_SLAVE_CLASS_HID *hid_instance,
 
   /* USER CODE BEGIN USBD_Custom_HID_SetFeature */
   UX_PARAMETER_NOT_USED(hid_instance);
-  UX_PARAMETER_NOT_USED(hid_event);
+  LOG_DEBUG("report ID=%u received, length=%u", hid_event->ux_device_class_hid_event_report_id, hid_event->ux_device_class_hid_event_length);
   /* USER CODE END USBD_Custom_HID_SetFeature */
 
   return status;
