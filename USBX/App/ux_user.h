@@ -183,7 +183,7 @@
    is 2048 bytes but can be reduced in memory constrained environments. For cd-rom support in the storage
    class, this value cannot be less than 2048.  */
 
-/* #define UX_SLAVE_REQUEST_DATA_MAX_LENGTH                 2048 */
+#define UX_SLAVE_REQUEST_DATA_MAX_LENGTH                    512
 
 /* Defined, this value includes code to handle storage Multi-Media Commands (MMC). E.g., DVD-ROM. */
 
@@ -354,7 +354,7 @@
 
 /* Defined, device HID interrupt OUT transfer is supported.  */
 
-/* #define UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT */
+#define UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT
 
 /* defined, this macro enables device audio feedback endpoint support.  */
 

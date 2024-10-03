@@ -25,6 +25,7 @@ TX_TIMER gameControllerTimer; //XXX temporary triggering timer
 TX_EVENT_FLAGS_GROUP gameControllerEvents;
 
 void sendJoyReport(void);
+void sendBufReport(void);  //XXX test
 void gameControllerTrigger(ULONG arg);  //XXX temp
 
 /**
@@ -46,7 +47,14 @@ void gameController(void)
     tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
     HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_RESET); //XXX test
 
-    sendJoyReport();
+    if(loopCounter %100 == 0)
+    {
+      sendBufReport();
+    }
+    else
+    {
+      sendJoyReport();
+    }      
 
     if((loopCounter++ % (TX_TIMER_TICKS_PER_SECOND >> 1)) == 0) //true every half a second
     {
@@ -106,4 +114,40 @@ void gameControllerTrigger(ULONG arg) //XXX temp
   TX_PARAMETER_NOT_USED(arg);
   HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_SET);
   tx_event_flags_set(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR);
+}
+
+void sendBufReport(void)  //XXX test
+{
+  UX_SLAVE_DEVICE* pDevice;
+  UX_SLAVE_INTERFACE* pInterface;
+
+  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_SET); //XXX test
+  HAL_GPIO_TogglePin(TEST_2_GPIO_Port, TEST_2_Pin);
+  HAL_GPIO_TogglePin(TEST_2_GPIO_Port, TEST_2_Pin);
+  /* get USB device */
+  pDevice = &_ux_system_slave->ux_system_slave_device;
+  /* get the interface */
+  pInterface = pDevice->ux_slave_device_first_interface;
+  /* get the HID instance */
+  pHid = pInterface->ux_slave_interface_class_instance;
+  ux_utility_memory_set(&hidEvent, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
+
+  /* check if USB device has been configured */
+  if((pDevice == TX_NULL) ||
+    (pDevice->ux_slave_device_state != UX_DEVICE_CONFIGURED) ||
+    (pInterface == TX_NULL) ||
+    (pHid == TX_NULL))
+  {
+    return;
+  }
+
+  hidEvent.ux_device_class_hid_event_buffer[0] = 0x11;
+  hidEvent.ux_device_class_hid_event_buffer[1] = 0x22;
+  hidEvent.ux_device_class_hid_event_buffer[2] = 0x33;
+  hidEvent.ux_device_class_hid_event_buffer[3] = 0x44;
+
+  hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_BUF;
+  hidEvent.ux_device_class_hid_event_length = 4;
+  ux_device_class_hid_event_set(pHid, &hidEvent);
+  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_RESET);
 }

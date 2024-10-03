@@ -158,10 +158,10 @@ __ALIGN_END =
   0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
   0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
   0x75, 0x08,                    //   REPORT_SIZE (8)
-  0x95, 0x3F,                    //   REPORT_COUNT (63)
+  0x95, 0x04,                    //   REPORT_COUNT (4)
   0x09, 0x00,                    //   USAGE (Undefined)
   0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-  0x95, 0x3F,                    //   REPORT_COUNT (63)
+  0x95, 0x04,                    //   REPORT_COUNT (4)
   0x09, 0x00,                    //   USAGE (Undefined)
   0x91, 0x02,                    //   OUTPUT (Data,Var,Abs)  
   /* USER CODE END USBD_CustomHID_ReportDesc */
@@ -688,7 +688,7 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
           pdev->tclasslist[pdev->classId].Ifs[0] = interface;
 
           /* Assign endpoint numbers */
-          pdev->tclasslist[pdev->classId].NumEps = 1U; /* EP_IN */
+          pdev->tclasslist[pdev->classId].NumEps = 2U; /* EP_IN, EP_OUT */
 
           /* Check the current speed to assign endpoints */
           if (pdev->Speed == USBD_HIGH_SPEED)
@@ -696,12 +696,20 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
             /* Assign IN Endpoint */
             USBD_FrameWork_AssignEp(pdev, USBD_HID_CUSTOM_EPIN_ADDR,
                                     USBD_EP_TYPE_INTR, USBD_HID_CUSTOM_EPIN_HS_MPS);
+
+            /* Assign OUT Endpoint */
+            USBD_FrameWork_AssignEp(pdev, USBD_HID_CUSTOM_EPOUT_ADDR,
+                                    USBD_EP_TYPE_INTR, USBD_HID_CUSTOM_EPOUT_HS_MPS);
           }
           else
           {
             /* Assign IN Endpoint */
             USBD_FrameWork_AssignEp(pdev, USBD_HID_CUSTOM_EPIN_ADDR,
                                     USBD_EP_TYPE_INTR, USBD_HID_CUSTOM_EPIN_FS_MPS);
+
+            /* Assign OUT Endpoint */
+            USBD_FrameWork_AssignEp(pdev, USBD_HID_CUSTOM_EPOUT_ADDR,
+                                    USBD_EP_TYPE_INTR, USBD_HID_CUSTOM_EPOUT_FS_MPS);
           }
 
           /* Configure and Append the Descriptor */
@@ -855,6 +863,12 @@ static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
                                 (uint16_t)pdev->tclasslist[pdev->classId].Eps[0].size,
                                 USBD_HID_CUSTOM_EPIN_FS_BINTERVAL,
                                 USBD_HID_CUSTOM_EPIN_HS_BINTERVAL);
+
+        __USBD_FRAMEWORK_SET_EP(pdev->tclasslist[pdev->classId].Eps[1].add,
+                                USBD_EP_TYPE_INTR,
+                                (uint16_t)pdev->tclasslist[pdev->classId].Eps[1].size,
+                                USBD_HID_CUSTOM_EPOUT_HS_BINTERVAL,
+                                USBD_HID_CUSTOM_EPOUT_FS_BINTERVAL);
       }
       else
       {
@@ -864,6 +878,12 @@ static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
                                 (uint16_t)pdev->tclasslist[pdev->classId].Eps[0].size,
                                 USBD_HID_CUSTOM_EPIN_FS_BINTERVAL,
                                 USBD_HID_CUSTOM_EPIN_HS_BINTERVAL);
+
+        __USBD_FRAMEWORK_SET_EP(pdev->tclasslist[pdev->classId].Eps[1].add,
+                                USBD_EP_TYPE_INTR,
+                                (uint16_t)pdev->tclasslist[pdev->classId].Eps[1].size,
+                                USBD_HID_CUSTOM_EPOUT_HS_BINTERVAL,
+                                USBD_HID_CUSTOM_EPOUT_FS_BINTERVAL);
       }
 
       break;
