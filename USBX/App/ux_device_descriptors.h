@@ -284,12 +284,12 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_HID_CUSTOM_EPOUT_ADDR                    0x01U
 #define USBD_HID_CUSTOM_EPIN_FS_MPS                   4U
 #define USBD_HID_CUSTOM_EPIN_HS_MPS                   4U
-#define USBD_HID_CUSTOM_EPIN_FS_BINTERVAL             5U
-#define USBD_HID_CUSTOM_EPIN_HS_BINTERVAL             5U
+#define USBD_HID_CUSTOM_EPIN_FS_BINTERVAL             1U
+#define USBD_HID_CUSTOM_EPIN_HS_BINTERVAL             1U
 #define USBD_HID_CUSTOM_EPOUT_FS_MPS                  4U
 #define USBD_HID_CUSTOM_EPOUT_HS_MPS                  4U
-#define USBD_HID_CUSTOM_EPOUT_FS_BINTERVAL            5U
-#define USBD_HID_CUSTOM_EPOUT_HS_BINTERVAL            5U
+#define USBD_HID_CUSTOM_EPOUT_FS_BINTERVAL            1U
+#define USBD_HID_CUSTOM_EPOUT_HS_BINTERVAL            1U
 
 #ifndef USBD_CONFIG_STR_DESC_IDX
 #define USBD_CONFIG_STR_DESC_IDX                      0U

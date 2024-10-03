@@ -51,10 +51,7 @@ void gameController(void)
     {
       sendBufReport();
     }
-    else
-    {
-      sendJoyReport();
-    }      
+    sendJoyReport();
 
     if((loopCounter++ % (TX_TIMER_TICKS_PER_SECOND >> 1)) == 0) //true every half a second
     {
@@ -68,7 +65,7 @@ void sendJoyReport(void)
   UX_SLAVE_DEVICE* pDevice;
   UX_SLAVE_INTERFACE* pInterface;
 
-  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_SET); //XXX test
+  //HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_SET); //XXX test
   /* get USB device */
   pDevice = &_ux_system_slave->ux_system_slave_device;
   /* get the interface */
@@ -96,7 +93,7 @@ void sendJoyReport(void)
   joyReport.Ry = i16val;
   joyReport.Rz = i16val;
   joyReport.slider = i16val;
-  joyReport.dial = i16val;
+  joyReport.dial = (int16_t)cnt;
   joyReport.hat = ((cnt >> 5) % 8) + 1;
   joyReport.buttons = 1 << ((cnt >> 5) % 32);
   cnt++;
@@ -106,7 +103,7 @@ void sendJoyReport(void)
   hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_JOY;
   hidEvent.ux_device_class_hid_event_length = sizeof(JoyReport_t);
   ux_device_class_hid_event_set(pHid, &hidEvent);
-  HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_RESET);
+  //HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_RESET);
 }
 
 void gameControllerTrigger(ULONG arg) //XXX temp
@@ -141,10 +138,9 @@ void sendBufReport(void)  //XXX test
     return;
   }
 
-  hidEvent.ux_device_class_hid_event_buffer[0] = 0x11;
-  hidEvent.ux_device_class_hid_event_buffer[1] = 0x22;
-  hidEvent.ux_device_class_hid_event_buffer[2] = 0x33;
-  hidEvent.ux_device_class_hid_event_buffer[3] = 0x44;
+  static uint32_t cnt = 0;
+  memcpy(hidEvent.ux_device_class_hid_event_buffer, &cnt, 4);
+  cnt++;
 
   hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_BUF;
   hidEvent.ux_device_class_hid_event_length = 4;
