@@ -47,16 +47,20 @@ void gameController(void)
     tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
     HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_RESET); //XXX test
 
-    if(loopCounter %100 == 0)
+    if(actualFlags & GAME_CTRL_EVENT_TIMER_TRIG)
     {
-      sendBufReport();
-    }
-    sendJoyReport();
+      /* loop triggered by game controller timer */
+      if(loopCounter %100 == 0)
+      {
+        sendBufReport();
+      }
+      sendJoyReport();
 
-    if((loopCounter++ % (TX_TIMER_TICKS_PER_SECOND >> 1)) == 0) //true every half a second
-    {
-      HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
-    }    
+      if((loopCounter++ % (TX_TIMER_TICKS_PER_SECOND >> 1)) == 0) //true every half a second
+      {
+        HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
+      }    
+    }
   }
 }
 
