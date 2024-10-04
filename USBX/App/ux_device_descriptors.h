@@ -244,7 +244,10 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_defines */
 #define REPORT_ID_JOY   1
-#define REPORT_ID_BUF   2
+#define REPORT_ID_GEN   2
+
+#define GEN_BUF_OUT_SIZE    4 /* generic report buffer out size (to PC) */
+#define GEN_BUF_IN_SIZE     4 /* generic report buffer in size (from PC) */
 /* USER CODE END Private_defines */
 
 #define USBD_VID                                      1155

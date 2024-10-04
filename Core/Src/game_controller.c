@@ -146,7 +146,7 @@ void sendBufReport(void)  //XXX test
   memcpy(hidEvent.ux_device_class_hid_event_buffer, &cnt, 4);
   cnt++;
 
-  hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_BUF;
+  hidEvent.ux_device_class_hid_event_report_id = REPORT_ID_GEN;
   hidEvent.ux_device_class_hid_event_length = 4;
   ux_device_class_hid_event_set(pHid, &hidEvent);
   HAL_GPIO_WritePin(TEST_2_GPIO_Port, TEST_2_Pin, GPIO_PIN_RESET);
