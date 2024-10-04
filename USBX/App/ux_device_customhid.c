@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "logger.h"
+#include "game_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+uint8_t genericInpBuf[USBD_MAX_EP0_SIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,6 +103,10 @@ UINT USBD_Custom_HID_SetFeature(UX_SLAVE_CLASS_HID *hid_instance,
   /* USER CODE BEGIN USBD_Custom_HID_SetFeature */
   UX_PARAMETER_NOT_USED(hid_instance);
   LOG_DEBUG("report ID=%u received, length=%u", hid_event->ux_device_class_hid_event_report_id, hid_event->ux_device_class_hid_event_length);
+  /* copy received data to generic input buffer */
+  memcpy(genericInpBuf, hid_event->ux_device_class_hid_event_buffer, hid_event->ux_device_class_hid_event_length);
+  /* send event to game controller */
+  tx_event_flags_set(&gameControllerEvents, GAME_CTRL_EVENT_GEN_INP, TX_OR);
   /* USER CODE END USBD_Custom_HID_SetFeature */
 
   return status;

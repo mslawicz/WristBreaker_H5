@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ux_device_descriptors.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -64,7 +64,7 @@ ULONG USBD_Custom_HID_EventMaxLength(VOID);
 #endif /* UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT */
 
 /* USER CODE BEGIN EFP */
-
+extern uint8_t genericInpBuf[USBD_MAX_EP0_SIZE];
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

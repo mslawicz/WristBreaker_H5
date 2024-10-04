@@ -1,8 +1,8 @@
 #include "game_controller.h"
 #include "logger.h"
-#include "ux_api.h"
 #include "ux_device_class_hid.h"
 #include "ux_device_descriptors.h"
+#include "ux_device_customhid.h"
 
 typedef struct __attribute__((__packed__))
 {
@@ -44,8 +44,10 @@ void gameController(void)
   /* Infinite loop */
   while (1)
   {
-    tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
+    tx_event_flags_get(&gameControllerEvents, GAME_CTRL_EVENT_TIMER_TRIG | GAME_CTRL_EVENT_GEN_INP, TX_OR_CLEAR, &actualFlags, TX_WAIT_FOREVER);
     HAL_GPIO_WritePin(TEST_1_GPIO_Port, TEST_1_Pin, GPIO_PIN_RESET); //XXX test
+
+    /* check game controller event flags */
 
     if(actualFlags & GAME_CTRL_EVENT_TIMER_TRIG)
     {
@@ -61,6 +63,12 @@ void gameController(void)
         HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
       }    
     }
+
+    if(actualFlags & GAME_CTRL_EVENT_GEN_INP)
+    {
+      /* loop triggered by generic data received */
+      LOG_DEBUG("generic input buffer: %u,%u,%u,%u", genericInpBuf[0], genericInpBuf[1], genericInpBuf[2], genericInpBuf[3]);
+    }    
   }
 }
 
