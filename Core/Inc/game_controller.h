@@ -12,6 +12,7 @@
 #define GAME_CTRL_EVENT_GEN_INP  ((uint32_t)(2 << 0))
 
 extern TX_EVENT_FLAGS_GROUP gameControllerEvents;
+extern TIM_HandleTypeDef* pMotor_X_Timer;
 
 void gameController(void);
 

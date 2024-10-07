@@ -23,6 +23,7 @@ UX_SLAVE_CLASS_HID* pHid;
 JoyReport_t joyReport;
 TX_TIMER gameControllerTimer; //XXX temporary triggering timer
 TX_EVENT_FLAGS_GROUP gameControllerEvents;
+TIM_HandleTypeDef* pMotor_X_Timer =NULL;
 
 void sendJoyReport(void);
 void sendBufReport(void);  //XXX test
@@ -40,6 +41,14 @@ void gameController(void)
   LOG_INFO("gameController entry");
   tx_timer_create(&gameControllerTimer, "game controller timer", gameControllerTrigger, 0, 100, 1, TX_AUTO_ACTIVATE); //XXX temp
   tx_event_flags_create(&gameControllerEvents, "game controller events");
+
+  /* XXX test of motor pwm signals */
+  HAL_TIM_PWM_Start(pMotor_X_Timer, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(pMotor_X_Timer, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(pMotor_X_Timer, TIM_CHANNEL_3);
+  __HAL_TIM_SET_COMPARE(pMotor_X_Timer, TIM_CHANNEL_1, 10 * PWM_PERIOD / 100);
+  __HAL_TIM_SET_COMPARE(pMotor_X_Timer, TIM_CHANNEL_2, 25 * PWM_PERIOD / 100);
+  __HAL_TIM_SET_COMPARE(pMotor_X_Timer, TIM_CHANNEL_3, 50 * PWM_PERIOD / 100);
 
   /* Infinite loop */
   while (1)

@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 void MX_USB_PCD_Init(void);
@@ -58,6 +60,7 @@ void MX_USB_PCD_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define PWM_PERIOD 6250
 #define TRACE_CK_Pin GPIO_PIN_2
 #define TRACE_CK_GPIO_Port GPIOE
 #define TRACE_D0_Pin GPIO_PIN_3
